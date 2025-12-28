@@ -1,11 +1,12 @@
 use floem::{
-    IntoView,
-    kurbo::Point,
+    Application, IntoView,
+    kurbo::{Point, Size},
     peniko::{self, Color, Gradient, GradientKind},
-    prelude::RwSignal,
+    prelude::*,
     taffy::{AlignItems, JustifyContent},
     text::Weight,
     views::{Button, Decorators, Stack, h_stack, label, stack, text_input},
+    window::WindowConfig,
 };
 
 fn render_toolbar() -> Stack {
@@ -145,5 +146,13 @@ fn app_view() -> impl IntoView {
 }
 
 fn main() {
-    floem::launch(app_view);
+    let app = Application::new().window(
+        |_| app_view(),
+        Some(
+            WindowConfig::default()
+                .size(Size::new(1000.0, 600.0))
+                .title("Code Flow"),
+        ),
+    );
+    app.run();
 }
