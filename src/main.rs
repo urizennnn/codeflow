@@ -31,12 +31,12 @@ fn render_toolbar() -> Stack {
     };
 
     h_stack((
+        label(|| "⚡ CodeFlow").style(|s| {
+            s.font_size(24.0)
+                .font_weight(Weight::BOLD)
+                .color(Color::rgb8(102, 126, 234))
+        }),
         h_stack((
-            label(|| "⚡ CodeFlow").style(|s| {
-                s.font_size(24.0)
-                    .font_weight(Weight::BOLD)
-                    .color(Color::rgb8(102, 126, 234))
-            }),
             h_stack((
                 Button::new("File").style(|s| {
                     s.border_radius(8.0)
@@ -80,49 +80,53 @@ fn render_toolbar() -> Stack {
                 }),
             ))
             .style(|s| s.gap(8.0)),
+            h_stack((
+                text_input(text).placeholder("Search files...").style(|s| {
+                    s.border_radius(10.0)
+                        .padding(8.0)
+                        .padding_left(16.0)
+                        .padding_right(16.0)
+                        .font_size(14.0)
+                        .width(250.0)
+                        .color(Color::rgba8(168, 179, 207, 255))
+                        .background(Color::rgba8(255, 255, 255, 20))
+                        .border_color(Color::rgba8(255, 255, 255, 26))
+                        .border(1.0)
+                }),
+                Button::new("Settings").style(|s| {
+                    s.border_radius(10.0)
+                        .padding(8.0)
+                        .padding_left(20.0)
+                        .padding_right(20.0)
+                        .font_size(14.0)
+                        .font_weight(Weight::SEMIBOLD)
+                        .color(Color::WHITE)
+                        .background(Color::rgba8(255, 255, 255, 26))
+                        .border(0.0)
+                }),
+                Button::new("Run Code").style(|s| {
+                    s.border_radius(10.0)
+                        .padding(8.0)
+                        .padding_left(20.0)
+                        .padding_right(20.0)
+                        .font_size(14.0)
+                        .font_weight(Weight::SEMIBOLD)
+                        .color(Color::WHITE)
+                        .background(Color::rgb8(102, 126, 234))
+                        .border(0.0)
+                }),
+            ))
+            .style(|s| s.gap(16.0).align_items(AlignItems::Center)),
         ))
-        .style(|s| s.gap(24.0).align_items(AlignItems::Center).flex_shrink(0.0)),
-        h_stack((
-            text_input(text).placeholder("Search files...").style(|s| {
-                s.border_radius(10.0)
-                    .padding(8.0)
-                    .padding_left(16.0)
-                    .padding_right(16.0)
-                    .font_size(14.0)
-                    .width(250.0)
-                    .color(Color::rgba8(168, 179, 207, 255))
-                    .background(Color::rgba8(255, 255, 255, 20))
-                    .border_color(Color::rgba8(255, 255, 255, 26))
-                    .border(1.0)
-            }),
-            Button::new("Settings").style(|s| {
-                s.border_radius(10.0)
-                    .padding(8.0)
-                    .padding_left(20.0)
-                    .padding_right(20.0)
-                    .font_size(14.0)
-                    .font_weight(Weight::SEMIBOLD)
-                    .color(Color::WHITE)
-                    .background(Color::rgba8(255, 255, 255, 26))
-                    .border(0.0)
-            }),
-            Button::new("Run Code").style(|s| {
-                s.border_radius(10.0)
-                    .padding(8.0)
-                    .padding_left(20.0)
-                    .padding_right(20.0)
-                    .font_size(14.0)
-                    .font_weight(Weight::SEMIBOLD)
-                    .color(Color::WHITE)
-                    .background(Color::rgb8(102, 126, 234))
-                    .border(0.0)
-            }),
-        ))
-        .style(|s| s.gap(16.0).align_items(AlignItems::Center).flex_shrink(0.0)),
+        .style(|s| {
+            s.width_full()
+                .justify_content(JustifyContent::SpaceBetween)
+                .gap(312)
+        }),
     ))
     .style(|s| {
         s.width_full()
-            .justify_content(JustifyContent::SpaceBetween)
+            .gap(24.0)
             .align_items(AlignItems::Center)
             .padding_left(24.0)
             .padding_right(24.0)
