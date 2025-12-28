@@ -1,0 +1,4 @@
+
+  [env]
+  XAUTHORITY = "/run/user/1000/xauth_ooOULL"
+  DISPLAY = ":0"

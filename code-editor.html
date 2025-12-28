@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeFlow Editor - Design Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .design-frame {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .design-intro {
+            background: linear-gradient(135deg, #2d3561 0%, #1a1f3a 100%);
+            padding: 40px;
+            color: #fff;
+        }
+
+        .intro-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .intro-subtitle {
+            font-size: 16px;
+            opacity: 0.8;
+        }
+
+        /* Editor Container */
+        .editor-container {
+            background: #0a0e1a;
+            height: 800px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Header */
+        .editor-header {
+            background: linear-gradient(180deg, #1a1f3a 0%, #151929 100%);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: #a8b3cf;
+            font-size: 14px;
+            background: rgba(255,255,255,0.05);
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover {
+            background: rgba(102, 126, 234, 0.2);
+            color: #fff;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .search-bar {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 8px 16px;
+            color: #a8b3cf;
+            font-size: 14px;
+            width: 250px;
+        }
+
+        .action-btn {
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        /* Main Layout */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #0f1320;
+            border-right: 1px solid #1a1f3a;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            background: #151929;
+            border-bottom: 1px solid #1a1f3a;
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            color: #6b7a99;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .sidebar-tab.active {
+            color: #667eea;
+        }
+
+        .sidebar-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .sidebar-content {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .project-tree {
+            margin-top: 8px;
+        }
+
+        .tree-folder {
+            margin-bottom: 12px;
+        }
+
+        .folder-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            color: #a8b3cf;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .folder-header:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .folder-icon {
+            font-size: 18px;
+        }
+
+        .file-list {
+            margin-left: 16px;
+            margin-top: 6px;
+        }
+
+        .file {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            color: #8b96b3;
+            font-size: 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 4px;
+        }
+
+        .file:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #a8b3cf;
+        }
+
+        .file.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            color: #fff;
+            border-left: 3px solid #667eea;
+        }
+
+        .file-icon {
+            font-size: 16px;
+        }
+
+        /* Editor Workspace */
+        .editor-workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #0a0e1a;
+        }
+
+        /* File Tabs */
+        .file-tabs {
+            display: flex;
+            background: #0f1320;
+            padding: 8px 16px;
+            gap: 8px;
+            border-bottom: 1px solid #1a1f3a;
+            overflow-x: auto;
+        }
+
+        .file-tab {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            color: #6b7a99;
+            font-size: 13px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .file-tab:hover {
+            background: rgba(255,255,255,0.05);
+            color: #a8b3cf;
+        }
+
+        .file-tab.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            color: #fff;
+            border-color: #667eea;
+        }
+
+        .tab-close {
+            opacity: 0.6;
+            font-size: 16px;
+            margin-left: 8px;
+        }
+
+        .tab-close:hover {
+            opacity: 1;
+        }
+
+        /* Code Editor */
+        .code-editor {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .gutter {
+            width: 70px;
+            background: #0a0e1a;
+            padding: 20px 12px;
+            text-align: right;
+            color: #3d4663;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 26px;
+            user-select: none;
+            border-right: 2px solid #1a1f3a;
+        }
+
+        .code-content {
+            flex: 1;
+            padding: 20px 24px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 15px;
+            line-height: 26px;
+            color: #e6edf3;
+            overflow: auto;
+        }
+
+        .code-line {
+            display: block;
+            white-space: pre;
+        }
+
+        /* Syntax Highlighting - Custom Theme */
+        .kw { color: #ff79c6; font-weight: 600; }
+        .str { color: #50fa7b; }
+        .cmt { color: #6272a4; font-style: italic; }
+        .fn { color: #8be9fd; }
+        .var { color: #f8f8f2; }
+        .num { color: #bd93f9; }
+        .type { color: #ffb86c; }
+        .prop { color: #f1fa8c; }
+
+        /* Bottom Panel */
+        .bottom-panel {
+            height: 220px;
+            background: #0f1320;
+            border-top: 2px solid #1a1f3a;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            display: flex;
+            background: #151929;
+            padding: 0 16px;
+            border-bottom: 1px solid #1a1f3a;
+        }
+
+        .panel-tab {
+            padding: 12px 20px;
+            color: #6b7a99;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .panel-tab.active {
+            color: #667eea;
+        }
+
+        .panel-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .panel-body {
+            flex: 1;
+            padding: 16px 20px;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 22px;
+        }
+
+        .console-line {
+            color: #8b96b3;
+            margin-bottom: 6px;
+        }
+
+        .console-prompt {
+            color: #50fa7b;
+            font-weight: 600;
+        }
+
+        .console-info {
+            color: #8be9fd;
+        }
+
+        .console-success {
+            color: #50fa7b;
+        }
+
+        /* Footer Bar */
+        .footer-bar {
+            height: 36px;
+            background: linear-gradient(180deg, #1a1f3a 0%, #151929 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            border-top: 1px solid #667eea;
+        }
+
+        .footer-left,
+        .footer-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .footer-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #8b96b3;
+            font-size: 12px;
+        }
+
+        .footer-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Design Guide */
+        .design-guide {
+            background: #f8f9fc;
+            padding: 40px;
+        }
+
+        .guide-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3561;
+            margin-bottom: 24px;
+        }
+
+        .guide-section {
+            margin-bottom: 32px;
+        }
+
+        .section-heading {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3561;
+            margin-bottom: 16px;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .spec-card {
+            background: #fff;
+            border: 2px solid #e6edf3;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .spec-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+        }
+
+        .spec-label {
+            font-size: 12px;
+            color: #6b7a99;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .spec-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d3561;
+        }
+
+        .spec-desc {
+            font-size: 13px;
+            color: #8b96b3;
+            margin-top: 6px;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+        }
+
+        .color-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .color-preview {
+            height: 80px;
+        }
+
+        .color-info {
+            background: #fff;
+            padding: 12px;
+        }
+
+        .color-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d3561;
+            margin-bottom: 4px;
+        }
+
+        .color-code {
+            font-size: 11px;
+            color: #6b7a99;
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Annotations */
+        .annotation {
+            position: absolute;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .annotation::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        .annotation.left::before {
+            right: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 8px 8px 8px 0;
+            border-color: transparent #667eea transparent transparent;
+        }
+
+        .annotation.top::before {
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 0 8px 8px 8px;
+            border-color: transparent transparent #667eea transparent;
+        }
+
+        .annotation.right::before {
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 8px 0 8px 8px;
+            border-color: transparent transparent transparent #764ba2;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0e1a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="design-frame">
+        <!-- Design Introduction -->
+        <div class="design-intro">
+            <h1 class="intro-title">CodeFlow Editor</h1>
+            <p class="intro-subtitle">A modern, gradient-themed code editor with a unique visual identity</p>
+        </div>
+
+        <!-- Editor Mockup -->
+        <div class="editor-container" style="position: relative;">
+            <!-- Annotations -->
+            <div class="annotation left" style="top: 30px; right: calc(100% + 20px);">Header with gradient accent</div>
+            <div class="annotation top" style="top: -50px; left: 140px;">Tabbed sidebar navigation</div>
+            <div class="annotation top" style="top: -50px; left: 50%;">File tabs with active state</div>
+            <div class="annotation right" style="top: 400px; left: calc(100% + 20px);">Console/Terminal panel</div>
+
+            <!-- Header -->
+            <div class="editor-header">
+                <div class="header-left">
+                    <div class="logo">⚡ CodeFlow</div>
+                    <div class="nav-menu">
+                        <div class="nav-item">File</div>
+                        <div class="nav-item">Edit</div>
+                        <div class="nav-item">View</div>
+                        <div class="nav-item">Tools</div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <input type="text" class="search-bar" placeholder="Search files...">
+                    <button class="action-btn btn-secondary">Settings</button>
+                    <button class="action-btn btn-primary">Run Code</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <div class="sidebar-tabs">
+                        <div class="sidebar-tab active">Files</div>
+                        <div class="sidebar-tab">Search</div>
+                        <div class="sidebar-tab">Git</div>
+                    </div>
+                    <div class="sidebar-content">
+                        <div class="project-tree">
+                            <div class="tree-folder">
+                                <div class="folder-header">
+                                    <span class="folder-icon">📂</span>
+                                    <span>my-app</span>
+                                </div>
+                                <div class="file-list">
+                                    <div class="file active">
+                                        <span class="file-icon">⚛️</span>
+                                        <span>App.jsx</span>
+                                    </div>
+                                    <div class="file">
+                                        <span class="file-icon">📄</span>
+                                        <span>index.js</span>
+                                    </div>
+                                    <div class="file">
+                                        <span class="file-icon">🎨</span>
+                                        <span>styles.css</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tree-folder">
+                                <div class="folder-header">
+                                    <span class="folder-icon">📂</span>
+                                    <span>components</span>
+                                </div>
+                                <div class="file-list">
+                                    <div class="file">
+                                        <span class="file-icon">⚛️</span>
+                                        <span>Button.jsx</span>
+                                    </div>
+                                    <div class="file">
+                                        <span class="file-icon">⚛️</span>
+                                        <span>Header.jsx</span>
+                                    </div>
+                                    <div class="file">
+                                        <span class="file-icon">⚛️</span>
+                                        <span>Card.jsx</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="file">
+                                <span class="file-icon">📦</span>
+                                <span>package.json</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Editor Workspace -->
+                <div class="editor-workspace">
+                    <!-- File Tabs -->
+                    <div class="file-tabs">
+                        <div class="file-tab active">
+                            <span>⚛️</span>
+                            <span>App.jsx</span>
+                            <span class="tab-close">×</span>
+                        </div>
+                        <div class="file-tab">
+                            <span>🎨</span>
+                            <span>styles.css</span>
+                            <span class="tab-close">×</span>
+                        </div>
+                        <div class="file-tab">
+                            <span>📄</span>
+                            <span>index.js</span>
+                            <span class="tab-close">×</span>
+                        </div>
+                    </div>
+
+                    <!-- Code Editor -->
+                    <div class="code-editor">
+                        <div class="gutter">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+                        </div>
+                        <div class="code-content">
+<span class="code-line"><span class="kw">import</span> <span class="var">React</span>, { <span class="fn">useState</span> } <span class="kw">from</span> <span class="str">'react'</span>;</span>
+<span class="code-line"><span class="kw">import</span> <span class="str">'./App.css'</span>;</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="cmt">// Main application component</span></span>
+<span class="code-line"><span class="kw">function</span> <span class="fn">App</span>() {</span>
+<span class="code-line">  <span class="kw">const</span> [<span class="var">count</span>, <span class="var">setCount</span>] = <span class="fn">useState</span>(<span class="num">0</span>);</span>
+<span class="code-line"></span>
+<span class="code-line">  <span class="kw">return</span> (</span>
+<span class="code-line">    &lt;<span class="type">div</span> <span class="prop">className</span>=<span class="str">"app"</span>&gt;</span>
+<span class="code-line">      &lt;<span class="type">h1</span>&gt;Counter: {<span class="var">count</span>}&lt;/<span class="type">h1</span>&gt;</span>
+<span class="code-line">      &lt;<span class="type">button</span> <span class="prop">onClick</span>={() =&gt; <span class="fn">setCount</span>(<span class="var">count</span> + <span class="num">1</span>)}&gt;</span>
+<span class="code-line">        Increment</span>
+<span class="code-line">      &lt;/<span class="type">button</span>&gt;</span>
+<span class="code-line">    &lt;/<span class="type">div</span>&gt;</span>
+<span class="code-line">  );</span>
+<span class="code-line">}</span>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Panel -->
+                    <div class="bottom-panel">
+                        <div class="panel-header">
+                            <div class="panel-tab active">Console</div>
+                            <div class="panel-tab">Terminal</div>
+                            <div class="panel-tab">Output</div>
+                            <div class="panel-tab">Problems</div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="console-line"><span class="console-prompt">➜</span> <span class="console-info">Development server started</span></div>
+                            <div class="console-line"><span class="console-success">✓</span> Compiled successfully!</div>
+                            <div class="console-line"></div>
+                            <div class="console-line"><span class="console-info">Local:</span>   http://localhost:3000</div>
+                            <div class="console-line"><span class="console-info">Network:</span> http://192.168.1.5:3000</div>
+                            <div class="console-line"></div>
+                            <div class="console-line"><span class="console-prompt">➜</span> <span style="opacity: 0.5;">|</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bar -->
+            <div class="footer-bar">
+                <div class="footer-left">
+                    <div class="footer-item">
+                        <span>🌿</span>
+                        <span>main</span>
+                    </div>
+                    <div class="footer-item">
+                        <span>Issues:</span>
+                        <span class="footer-badge">0</span>
+                    </div>
+                </div>
+                <div class="footer-right">
+                    <div class="footer-item">Line 6, Col 12</div>
+                    <div class="footer-item">UTF-8</div>
+                    <div class="footer-item">JavaScript JSX</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Design Guide -->
+        <div class="design-guide">
+            <h2 class="guide-title">Design System Specifications</h2>
+
+            <!-- Component Specs -->
+            <div class="guide-section">
+                <h3 class="section-heading">Component Dimensions</h3>
+                <div class="specs-grid">
+                    <div class="spec-card">
+                        <div class="spec-label">Header</div>
+                        <div class="spec-value">60px</div>
+                        <div class="spec-desc">Main navigation bar height</div>
+                    </div>
+                    <div class="spec-card">
+                        <div class="spec-label">Sidebar</div>
+                        <div class="spec-value">280px</div>
+                        <div class="spec-desc">File explorer width</div>
+                    </div>
+                    <div class="spec-card">
+                        <div class="spec-label">Sidebar Tabs</div>
+                        <div class="spec-value">48px</div>
+                        <div class="spec-desc">Tab bar height</div>
+                    </div>
+                    <div class="spec-card">
+                        <div class="spec-label">File Tabs</div>
+                        <div class="spec-value">44px</div>
+                        <div class="spec-desc">Individual tab height</div>
+                    </div>
+                    <div class="spec-card">
+                        <div class="spec-label">Gutter</div>
+                        <div class="spec-value">70px</div>
+                        <div class="spec-desc">Line numbers width</div>
+                    </div>
+                    <div class="spec-card">
+                        <div class="spec-label">Bottom Panel</div>
+                        <div class="spec-value">220px</div>
+                        <div class="spec-desc">Console/terminal height</div>
+                    </div>
+                    <div class="spec-card">
+                        <div class="spec-label">Footer Bar</div>
+                        <div class="spec-value">36px</div>
+                        <div class="spec-desc">Status bar height</div>
+                    </div>
+                    <div class="spec-card">
+                        <div class="spec-label">Border Radius</div>
+                        <div class="spec-value">8-12px</div>
+                        <div class="spec-desc">Consistent rounding</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Color Palette -->
+            <div class="guide-section">
+                <h3 class="section-heading">Color Palette</h3>
+                <div class="color-grid">
+                    <div class="color-card">
+                        <div class="color-preview" style="background: #0a0e1a;"></div>
+                        <div class="color-info">
+                            <div class="color-name">Deep Background</div>
+                            <div class="color-code">#0a0e1a</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-preview" style="background: #0f1320;"></div>
+                        <div class="color-info">
+                            <div class="color-name">Surface</div>
+                            <div class="color-code">#0f1320</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-preview" style="background: #1a1f3a;"></div>
+                        <div class="color-info">
+                            <div class="color-name">Elevated</div>
+                            <div class="color-code">#1a1f3a</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-preview" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                        <div class="color-info">
+                            <div class="color-name">Primary Gradient</div>
+                            <div class="color-code">#667eea → #764ba2</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-preview" style="background: #e6edf3;"></div>
+                        <div class="color-info">
+                            <div class="color-name">Text Primary</div>
+                            <div class="color-code">#e6edf3</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-preview" style="background: #a8b3cf;"></div>
+                        <div class="color-info">
+                            <div class="color-name">Text Secondary</div>
+                            <div class="color-code">#a8b3cf</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-preview" style="background: #6b7a99;"></div>
+                        <div class="color-info">
+                            <div class="color-name">Text Muted</div>
+                            <div class="color-code">#6b7a99</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-preview" style="background: #ff79c6;"></div>
+                        <div class="color-info">
+                            <div class="color-name">Syntax: Keyword</div>
+                            <div class="color-code">#ff79c6</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-preview" style="background: #50fa7b;"></div>
+                        <div class="color-info">
+                            <div class="color-name">Syntax: String</div>
+                            <div class="color-code">#50fa7b</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-preview" style="background: #8be9fd;"></div>
+                        <div class="color-info">
+                            <div class="color-name">Syntax: Function</div>
+                            <div class="color-code">#8be9fd</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-preview" style="background: #bd93f9;"></div>
+                        <div class="color-info">
+                            <div class="color-name">Syntax: Number</div>
+                            <div class="color-code">#bd93f9</div>
+                        </div>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-preview" style="background: #6272a4;"></div>
+                        <div class="color-info">
+                            <div class="color-name">Syntax: Comment</div>
+                            <div class="color-code">#6272a4</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typography -->
+            <div class="guide-section">
+                <h3 class="section-heading">Typography</h3>
+                <div class="specs-grid">
+                    <div class="spec-card">
+                        <div class="spec-label">UI Font</div>
+                        <div class="spec-value">Inter</div>
+                        <div class="spec-desc">System font fallback</div>
+                    </div>
+                    <div class="spec-card">
+                        <div class="spec-label">Code Font</div>
+                        <div class="spec-value">Fira Code</div>
+                        <div class="spec-desc">Monospace with ligatures</div>
+                    </div>
+                    <div class="spec-card">
+                        <div class="spec-label">Code Size</div>
+                        <div class="spec-value">15px</div>
+                        <div class="spec-desc">Editor font size</div>
+                    </div>
+                    <div class="spec-card">
+                        <div class="spec-label">Line Height</div>
+                        <div class="spec-value">26px</div>
+                        <div class="spec-desc">Code line spacing</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+        /* Top Bar */
+        .top-bar {
+            background: #2c2c2c;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .top-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo {
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        .menu-btn {
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 13px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .menu-btn:hover {
+            background: #404040;
+        }
+
+        .top-center {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .file-name {
+            font-size: 13px;
+            color: #b3b3b3;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            border: none;
+            background: #404040;
+            color: #fff;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #4a4a4a;
+        }
+
+        .btn-primary {
+            background: #0d99ff;
+        }
+
+        .btn-primary:hover {
+            background: #0086e6;
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            height: calc(100vh - 45px);
+        }
+
+        /* Left Sidebar - Tools */
+        .left-sidebar {
+            width: 50px;
+            background: #2c2c2c;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            gap: 8px;
+            border-right: 1px solid #1a1a1a;
+        }
+
+        .tool {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .tool:hover {
+            background: #404040;
+        }
+
+        .tool.active {
+            background: #0d99ff;
+        }
+
+        .tool-separator {
+            width: 24px;
+            height: 1px;
+            background: #404040;
+            margin: 8px 0;
+        }
+
+        /* Left Panel - Layers */
+        .left-panel {
+            width: 240px;
+            background: #252525;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #1a1a1a;
+        }
+
+        .panel-header {
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #b3b3b3;
+            border-bottom: 1px solid #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .icon-btn {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: #404040;
+        }
+
+        .layers-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .layer-item {
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .layer-item:hover {
+            background: #2c2c2c;
+        }
+
+        .layer-item.active {
+            background: #0d99ff;
+        }
+
+        .layer-icon {
+            font-size: 16px;
+        }
+
+        /* Canvas Area */
+        .canvas-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #1e1e1e;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            height: 45px;
+            background: #2c2c2c;
+            border-bottom: 1px solid #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .zoom-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 4px;
+            background: #404040;
+            transition: background 0.2s;
+            font-size: 16px;
+        }
+
+        .zoom-btn:hover {
+            background: #4a4a4a;
+        }
+
+        .zoom-level {
+            font-size: 12px;
+            color: #b3b3b3;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        /* Canvas */
+        .canvas {
+            flex: 1;
+            background: #1a1a1a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .canvas-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(#2a2a2a 1px, transparent 1px),
+                linear-gradient(90deg, #2a2a2a 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.3;
+        }
+
+        .canvas-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 600px;
+            background: #fff;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+        }
+
+        /* Right Panel - Properties */
+        .right-panel {
+            width: 280px;
+            background: #252525;
+            border-left: 1px solid #1a1a1a;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .properties {
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .property-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #b3b3b3;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .property-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .property-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 6px;
+        }
+
+        .property-input {
+            flex: 1;
+            padding: 6px 10px;
+            background: #1e1e1e;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 12px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .property-input:focus {
+            border-color: #0d99ff;
+        }
+
+        .color-picker {
+            width: 100%;
+            height: 36px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%);
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid #404040;
+            transition: border-color 0.2s;
+        }
+
+        .color-picker:hover {
+            border-color: #0d99ff;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #404040;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a4a4a;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-left">
+            <div class="logo">⬢</div>
+            <div class="menu-btn">File</div>
+            <div class="menu-btn">Edit</div>
+            <div class="menu-btn">View</div>
+            <div class="menu-btn">Insert</div>
+            <div class="menu-btn">Help</div>
+        </div>
+        <div class="top-center">
+            <span class="file-name">Untitled Design</span>
+        </div>
+        <div class="top-right">
+            <button class="btn">Present</button>
+            <button class="btn-primary btn">Share</button>
+            <div class="user-avatar">U</div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Left Sidebar - Tools -->
+        <div class="left-sidebar">
+            <div class="tool active">⌖</div>
+            <div class="tool">✋</div>
+            <div class="tool">⬜</div>
+            <div class="tool">○</div>
+            <div class="tool">▽</div>
+            <div class="tool">✏️</div>
+            <div class="tool-separator"></div>
+            <div class="tool">T</div>
+            <div class="tool">🖼️</div>
+            <div class="tool">💬</div>
+        </div>
+
+        <!-- Left Panel - Layers -->
+        <div class="left-panel">
+            <div class="panel-header">
+                Layers
+                <div class="panel-actions">
+                    <div class="icon-btn">+</div>
+                    <div class="icon-btn">⋮</div>
+                </div>
+            </div>
+            <div class="layers-list">
+                <div class="layer-item active">
+                    <span class="layer-icon">📄</span>
+                    <span>Page 1</span>
+                </div>
+                <div class="layer-item">
+                    <span class="layer-icon">⬜</span>
+                    <span>Rectangle</span>
+                </div>
+                <div class="layer-item">
+                    <span class="layer-icon">○</span>
+                    <span>Circle</span>
+                </div>
+                <div class="layer-item">
+                    <span class="layer-icon">T</span>
+                    <span>Text Layer</span>
+                </div>
+                <div class="layer-item">
+                    <span class="layer-icon">🖼️</span>
+                    <span>Image</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Canvas Area -->
+        <div class="canvas-area">
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <div class="zoom-controls">
+                    <div class="zoom-btn">−</div>
+                    <div class="zoom-level">100%</div>
+                    <div class="zoom-btn">+</div>
+                </div>
+            </div>
+
+            <!-- Canvas -->
+            <div class="canvas">
+                <div class="canvas-grid"></div>
+                <div class="canvas-content"></div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Properties -->
+        <div class="right-panel">
+            <div class="panel-header">
+                Design
+            </div>
+            <div class="properties">
+                <div class="property-section">
+                    <div class="section-title">Position</div>
+                    <div class="property-row">
+                        <div style="flex: 1;">
+                            <div class="property-label">X</div>
+                            <input type="text" class="property-input" value="0">
+                        </div>
+                        <div style="flex: 1;">
+                            <div class="property-label">Y</div>
+                            <input type="text" class="property-input" value="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="property-section">
+                    <div class="section-title">Size</div>
+                    <div class="property-row">
+                        <div style="flex: 1;">
+                            <div class="property-label">W</div>
+                            <input type="text" class="property-input" value="800">
+                        </div>
+                        <div style="flex: 1;">
+                            <div class="property-label">H</div>
+                            <input type="text" class="property-input" value="600">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="property-section">
+                    <div class="section-title">Fill</div>
+                    <div class="color-picker"></div>
+                </div>
+
+                <div class="property-section">
+                    <div class="section-title">Stroke</div>
+                    <div class="property-row">
+                        <div style="flex: 1;">
+                            <div class="property-label">Weight</div>
+                            <input type="text" class="property-input" value="1">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="property-section">
+                    <div class="section-title">Corner Radius</div>
+                    <input type="text" class="property-input" value="8">
+                </div>
+
+                <div class="property-section">
+                    <div class="section-title">Opacity</div>
+                    <input type="text" class="property-input" value="100%">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth interactions
+        document.querySelectorAll('.tool').forEach(tool => {
+            tool.addEventListener('click', function() {
+                document.querySelectorAll('.tool').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.layer-item').forEach(layer => {
+            layer.addEventListener('click', function() {
+                document.querySelectorAll('.layer-item').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
